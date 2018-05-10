@@ -1,5 +1,3 @@
-src/js/nevsuite.bundle.js
-src/node_modules/
-target/
+node_modules/
+dist/
 .idea
-*.iml
