@@ -36,9 +36,9 @@ class HomeStore extends ReduceStore {
     getInitialState() {
         let componentInfos = [];
 
-        const host = ( window.location.hostname !== "" ) ? window.location.hostname + ':8080' : 'localhost:8080';
-        this.createComponent("Common Backend", 'http://' + host + '/backend/ComponentService/respond');
-        this.createComponent("Timeseries", 'http://' + host + '/timeseries/ComponentService/respond');
+        const host = ( window.location.hostname !== "" ) ? window.location.hostname : 'localhost';
+        this.createComponent("Common Backend", 'http://' + host + ':8081/ComponentService/respond');
+        this.createComponent("Timeseries", 'http://' + host + ':8082/ComponentService/respond');
 
         return {
             componentInfos: componentInfos
