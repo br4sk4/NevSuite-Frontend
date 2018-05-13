@@ -14,6 +14,59 @@ class HomeStore extends ReduceStore {
         super(NevSuiteAppDispatcher);
     }
 
+    loadServices(registryHost) {
+        let components = [];
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                components = JSON.parse(this.responseText);
+                components.forEach(function(service) {
+                    HomeActions.loadInstances(registryHost, service);
+                })
+            } else if (this.readyState === 4) {
+                let classes = 'danger';
+                let response = 'Service-Discovery is not reachable!';
+                HomeActions.addComponentInfo('Common-Backend', classes, response);
+            }
+        };
+        xhttp.open("GET", registryHost + "/ComponentService/services", true);
+        xhttp.send();
+    }
+
+    loadInstances(registryHost, service) {
+        let instances = [];
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                instances = JSON.parse(this.responseText);
+                instances.forEach(function(instance) {
+                    if (service !== "service-registry") HomeActions.requestInstance(service, instance);
+                })
+            }
+        };
+        xhttp.open("GET", registryHost + "/ComponentService/services/" + service + "/instances", true);
+        xhttp.send();
+    }
+
+    requestInstance(service, instanceUrl) {
+        let response = '';
+        let classes = 'info';
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                classes = 'success';
+                response = this.responseText;
+                HomeActions.addComponentInfo(service, classes, response);
+            } else if (this.readyState === 4) {
+                classes = 'danger';
+                response = 'Not Available!';
+                HomeActions.addComponentInfo(service, classes, response);
+            }
+        };
+        xhttp.open("GET", instanceUrl + "/ComponentService/respond", true);
+        xhttp.send();
+    }
+
     createComponent(name, url) {
         let response = '';
         let classes = 'info';
@@ -37,8 +90,7 @@ class HomeStore extends ReduceStore {
         let componentInfos = [];
 
         const host = ( window.location.hostname !== "" ) ? window.location.hostname : 'localhost';
-        this.createComponent("Common Backend", 'http://' + host + ':8081/ComponentService/respond');
-        this.createComponent("Timeseries", 'http://' + host + ':8082/ComponentService/respond');
+        this.loadServices('http://' + host + ':8081');
 
         return {
             componentInfos: componentInfos
@@ -65,6 +117,14 @@ class HomeStore extends ReduceStore {
                     componentInfos: componentInfos,
                 });
                 return newState;
+
+            case HomeActionTypes.LOAD_INSTANCES:
+                this.loadInstances(action.registryHost, action.service);
+                return state;
+
+            case HomeActionTypes.REQUEST_INSTANCE:
+                this.requestInstance(action.service, action.instanceUrl);
+                return state;
 
             default:
                 return state;
