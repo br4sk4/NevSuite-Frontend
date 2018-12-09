@@ -2,7 +2,7 @@
  * Created by Braska on 25.11.2017.
  */
 import React from "react";
-import Chart from "../../node_modules/chart.js/src/chart.js";
+import Chart from "../../../node_modules/chart.js/src/chart.js";
 
 export default class SimpleLineChart extends React.Component {
 
@@ -65,8 +65,8 @@ export default class SimpleLineChart extends React.Component {
         const timestampFrom = this.formatTimestamp(actDate);
         const timestampTo = this.formatTimestamp(nextDate);
 
-        const host = ( window.location.hostname !== "" ) ? window.location.hostname + ':8080' : 'localhost:8080';
-        const url = 'http://' + host + '/timeseries/DomainService/timeseries/7e6ea77e-b652-11e7-abc4-cec278b6b50a/';
+        const host = ( window.location.hostname !== "" ) ? window.location.hostname + ':8082' : 'localhost:8080';
+        const url = 'http://' + host + '/DomainService/timeseries/7e6ea77e-b652-11e7-abc4-cec278b6b50a/';
 
         xhttp.onreadystatechange = this.processResponse;
         xhttp.open("GET", url + timestampFrom + "/" + timestampTo, true);
