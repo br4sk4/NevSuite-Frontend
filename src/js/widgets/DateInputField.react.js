@@ -8,7 +8,8 @@ export default class DateInputField extends React.Component {
     constructor(props) {
         super(props);
 
-        let date = new Date();
+        const parts = this.props.value.split('.');
+        const date = new Date(parts[2], parts[1] - 1, parts[0]);
         const year = date.getFullYear();
         const month = date.getMonth();
 
@@ -253,7 +254,7 @@ export default class DateInputField extends React.Component {
         return (
             <div style={{width: this.props.width||"100%", float: "left"}}>
                 <div className={widgetClass} tabIndex="0" onBlur={() => {if (this.state.showCalendar) this.toggleCalendar()}}>
-                    <input className="dateInputField" type="text" value={(this.state.actDate !== "") ? this.state.actDate : this.props.value} onFocus={this.toggleFocus} onBlur={this.toggleFocus} onChange={this.onChange}/>
+                    <input className="dateInputField" type="text" value={this.props.value} onFocus={this.toggleFocus} onBlur={this.toggleFocus} onChange={this.onChange}/>
                     <div className="dateInputButton" onClick={this.toggleCalendar}>
                         <span className="glyphicon glyphicon-calendar comboboxIcon"/>
                     </div>

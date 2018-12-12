@@ -16,7 +16,7 @@ export default class TabPager extends React.Component {
 
         scrollLeft = ( this.props.state.tabNavigation.tabPagerLeftVisible ) ? () => TabActions.scrollTabsLeft() : () => function() {};
         srcollRight = ( this.props.state.tabNavigation.tabPagerRightVisible ) ? () => TabActions.scrollTabsRight() : () => function() {};
-        addTab = () => TabActions.addTab(uuid(), 'Tab', 'EMPTY', true);
+        addTab = () => TabActions.addTab(uuid(), 'Tab', 'TIMESERIESVIEW', true);
 
         for (let i = 0; i < this.props.state.tabNavigation.tabs.length; ++i) {
             if ( this.props.state.tabNavigation.tabs[i].visible ) tabHeadings.push(<TabHeading key={i} index={i} state={this.props.state}/>);
