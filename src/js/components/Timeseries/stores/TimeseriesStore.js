@@ -35,10 +35,22 @@ class TimeseriesStore extends ReduceStore {
                 $.extend(newState, timeseriesViews);
                 return newState;
 
+            case TabActionTypes.REMOVE_TAB:
+                newState = $.extend(newState, state);
+                delete newState[action.identifier];
+                return newState;
+
             case TimeseriesActionTypes.LOAD_TIMESERIES:
                 newState = $.extend(newState, state);
 
-                $.extend(newState, action.timeseriesView);
+                timeseriesViews[action.tabIdentifier] = {
+                    timeseriesIdentifier: action.timeseriesIdentifier,
+                    date: action.date,
+                    xData: action.xData,
+                    yData: action.yData
+                };
+
+                $.extend(newState, timeseriesViews);
                 return newState;
 
             default:

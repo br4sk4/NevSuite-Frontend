@@ -6,19 +6,13 @@ import TimeseriesActionTypes from './TimeseriesActionTypes';
 const TimeseriesActions = {
 
     loadTimeseries(tabIdentifier, timeseriesIdentifier, date, xData, yData) {
-        let timeseriesView = {};
-
-        timeseriesView[tabIdentifier] = {
+        NevSuiteAppDispatcher.dispatch({
+            type: TimeseriesActionTypes.LOAD_TIMESERIES,
+            tabIdentifier: tabIdentifier,
             timeseriesIdentifier: timeseriesIdentifier,
             date: date,
             xData: xData,
             yData: yData
-        };
-
-        NevSuiteAppDispatcher.dispatch({
-            type: TimeseriesActionTypes.LOAD_TIMESERIES,
-            tabIdentifier: tabIdentifier,
-            timeseriesView: timeseriesView,
         });
     },
 
