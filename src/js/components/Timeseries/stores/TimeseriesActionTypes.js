@@ -1,7 +1,7 @@
 'use strict';
 
 const TimeseriesActionTypes = {
-    CHANGE_DATE: 'CHANGE_DATE',
+    LOAD_TIMESERIES: 'LOAD_TIMESERIES',
 };
 
 export default TimeseriesActionTypes;

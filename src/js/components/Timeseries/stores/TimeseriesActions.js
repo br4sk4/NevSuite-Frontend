@@ -5,16 +5,19 @@ import TimeseriesActionTypes from './TimeseriesActionTypes';
 
 const TimeseriesActions = {
 
-    changeDate(tabIdentifier, timeseriesIdentifier, date) {
+    loadTimeseries(tabIdentifier, timeseriesIdentifier, date, xData, yData) {
         let timeseriesView = {};
 
         timeseriesView[tabIdentifier] = {
             timeseriesIdentifier: timeseriesIdentifier,
-            date: date
+            date: date,
+            xData: xData,
+            yData: yData
         };
 
         NevSuiteAppDispatcher.dispatch({
-            type: TimeseriesActionTypes.CHANGE_DATE,
+            type: TimeseriesActionTypes.LOAD_TIMESERIES,
+            tabIdentifier: tabIdentifier,
             timeseriesView: timeseriesView,
         });
     },

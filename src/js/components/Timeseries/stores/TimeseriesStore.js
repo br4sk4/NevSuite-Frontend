@@ -28,14 +28,14 @@ class TimeseriesStore extends ReduceStore {
                 newState = $.extend(newState, state);
 
                 timeseriesViews[action.identifier] = {
-                    timeseriesIdentifier: '',
+                    timeseriesIdentifier: '7e6ea77e-b652-11e7-abc4-cec278b6b50a',
                     date: '01.01.2017'
                 };
 
                 $.extend(newState, timeseriesViews);
                 return newState;
 
-            case TimeseriesActionTypes.CHANGE_DATE:
+            case TimeseriesActionTypes.LOAD_TIMESERIES:
                 newState = $.extend(newState, state);
 
                 $.extend(newState, action.timeseriesView);

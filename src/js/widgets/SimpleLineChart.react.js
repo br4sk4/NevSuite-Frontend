@@ -8,69 +8,6 @@ export default class SimpleLineChart extends React.Component {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            xData: [],
-            actDate: this.props.date
-        };
-
-        let setData = (xData, yData) => {
-            this.setState({
-                xData : xData,
-                yData : yData,
-                actDate: this.props.date
-            })
-        };
-
-        this.formatTimestamp = function(date) {
-            let yearString = date.getFullYear();
-            let month = date.getMonth() + 1;
-            let monthString = (month < 10 ) ? "0" + month : month;
-            let day = date.getDate();
-            let dayString = (day < 10 ) ? "0" + day : day;
-            return  yearString + "-" + monthString + "-" + dayString + "T00:00:00Z";
-        };
-
-        this.processResponse = function() {
-            let xData = [];
-            let yData = [];
-
-            if (this.readyState === 4 && this.status === 200) {
-                const data = JSON.parse(this.responseText);
-                if ( data.timeseries.valueMap.length > 0 ) {
-                    xData.push('00:00');
-                    yData.push(data.timeseries.valueMap[0].value);
-                    data.timeseries.valueMap.forEach(function (tuple) {
-                        let time = tuple.timestamp.split('T')[1].split('Z')[0];
-                        xData.push(time.split(':')[0] + ':' + time.split(':')[1]);
-                        yData.push(tuple.value);
-                    });
-                    setData(xData, yData);
-                } else {
-                    setData(xData, yData);
-                }
-            } else if (this.readyState === 4) {
-                setData(xData, yData);
-            }
-        };
-    }
-
-    readTimeseries() {
-        let xhttp = new XMLHttpRequest();
-
-        let dateString = (this.props.date !== "" && this.props.date !== undefined) ? this.props.date : "01.01.2017";
-        let actDate = new Date(dateString.split('.')[2], parseInt(dateString.split('.')[1]) - 1, dateString.split('.')[0]);
-        let nextDate = new Date(dateString.split('.')[2], parseInt(dateString.split('.')[1]) - 1, parseInt(dateString.split('.')[0]) + 1);
-
-        const timestampFrom = this.formatTimestamp(actDate);
-        const timestampTo = this.formatTimestamp(nextDate);
-
-        const host = ( window.location.hostname !== "" ) ? window.location.hostname + ':8082' : 'localhost:8080';
-        const url = 'http://' + host + '/DomainService/timeseries/7e6ea77e-b652-11e7-abc4-cec278b6b50a/';
-
-        xhttp.onreadystatechange = this.processResponse;
-        xhttp.open("GET", url + timestampFrom + "/" + timestampTo, true);
-        xhttp.send();
     }
 
     createChart() {
@@ -78,12 +15,12 @@ export default class SimpleLineChart extends React.Component {
         new Chart($ctx, {
             type: 'line',
             data: {
-                labels: this.state.xData,
+                labels: this.props.timeseries.xData,
                 datasets: [{
                     label: 'Timeseries',
                     backgroundColor: 'rgba(134, 191, 160, 0.3)',
                     borderColor: 'rgb(66, 147, 102)',
-                    data: this.state.yData,
+                    data: this.props.timeseries.yData,
                     steppedLine: false,
                     lineTension: 0,
                     pointRadius: 0
@@ -117,18 +54,10 @@ export default class SimpleLineChart extends React.Component {
 
     componentDidUpdate() {
         this.createChart();
-        if ( this.state.actDate !== this.props.date ) {
-            this.setState({
-                xData: this.state.xData,
-                actDate: this.props.date
-            });
-            this.readTimeseries();
-        }
     }
 
     componentDidMount() {
         this.createChart();
-        this.readTimeseries();
     }
 
     render() {
